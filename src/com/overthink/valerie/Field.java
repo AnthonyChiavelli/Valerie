@@ -1,5 +1,6 @@
 package com.overthink.valerie;
 
+import android.widget.RelativeLayout;
 import com.overthink.valerie.R;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +12,7 @@ import android.widget.FrameLayout;
  * A custom view container that holds a view (usually a UI input widget) and a failure indicator that is normally
  * hidden but will be displayed if the view fails validation.
  */
-public class Field extends FrameLayout{
+public class Field extends RelativeLayout{
     // The view that is to be validated
     private int inputView;
     // The view displayed when this field fails validation

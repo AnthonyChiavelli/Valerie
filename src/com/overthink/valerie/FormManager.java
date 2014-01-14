@@ -113,18 +113,37 @@ public class FormManager {
 
             // If there were any failed fields in this form
             if (failedFields.size() > 0) {
-                // Call all failure callbacks in order
-                for (OnValidationFailureListener failureListener : registeredFailureCallbacks) {
-                    failureListener.onFailure(failedFields);
-                }
+                this.onFormValidationFailure(failedFields);
+
             }
             // If everything passed
             else {
-                // Call all success callbacks in order
-                for (OnValidationSuccessListener successListener : registeredSuccessCallbacks) {
-                    successListener.onSuccess();
-                }
+                this.onFormValidationSuccess();
             }
+        }
+    }
+
+    /**
+     * Called when any fields fail validation
+     *
+     * @param failedFields a list of the offending fields
+     */
+    private void onFormValidationFailure(List<Field> failedFields) {
+        // Call all failure callbacks in order
+        for (OnValidationFailureListener failureListener : registeredFailureCallbacks) {
+            failureListener.onFailure(failedFields);
+        }
+
+    }
+
+    /**
+     * Called when any fields pass validation
+     *
+     */
+    private void onFormValidationSuccess() {
+        // Call all success callbacks in order
+        for (OnValidationSuccessListener successListener : registeredSuccessCallbacks) {
+            successListener.onSuccess();
         }
     }
 
