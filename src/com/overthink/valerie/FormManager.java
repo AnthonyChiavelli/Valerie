@@ -147,4 +147,23 @@ public class FormManager {
         });
 
     }
+
+    /**
+     * Register a listener to be called back when validation is successful
+     *
+     * @param onValidationSuccessListener listener implementing success callback
+     */
+    public void registerSuccessCallback(OnValidationSuccessListener onValidationSuccessListener) {
+        registeredSuccessCallbacks.add(onValidationSuccessListener);
+    }
+
+    /**
+     * Register a listener to be called back when validation fails (any of the fields fail to validate)
+     *
+     * @param onValidationFailureListener listener implementing failure callback
+     */
+    public void registerFailureCallback(OnValidationFailureListener onValidationFailureListener) {
+        registeredFailureCallbacks.add(onValidationFailureListener);
+    }
+
 }
