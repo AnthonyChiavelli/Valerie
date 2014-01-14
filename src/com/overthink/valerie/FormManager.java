@@ -12,11 +12,10 @@ import java.util.List;
  * Manages the validation of a set of FormFields, usually corresponds to a single fragment or activity.
  * <p>
  * A FormManager turns your view into a form with field validation by allowing the registration of Fields, which
- * contain UI views and optional failure messages, and a segue button that initiates validation. Fields and segue
- * buttons may be registered in code, via the registerField() and registerSegueButton() method, or by using the
- * Field and Segue views in your layout. In the latter case, all you have to do is pass your view tree to
- * registerFieldsInViewTree() and Valerie will register all fields and buttons. You may also use any combination
- * of these methods, specifying some fields or buttons in XML and leaving some to be registered programmatically.
+ * contain UI views and optional failure messages Fields may be registered in code, via the registerField() method,
+ * or by using the Field views in your layout. In the latter case, all you have to do is pass your view tree to
+ * registerFieldsInViewTree() and Valerie will register all Fields it finds. You may also use any combination
+ * of these methods, specifying some fields in XML and leaving some to be registered programmatically.
  * <p>
  * A Field, whether specified in code or XML, may have a Validator and/or a FailureIndicator. The former refers to a
  * subclass of Validator that performs validation on its associated Field, the latter, a view to be displayed if the
@@ -27,6 +26,9 @@ import java.util.List;
  * registerOnValidationFailureCallback(). If any form in the field fails validation when it is triggered by a press of
  * the segue button, the failure callbacks are called in the order they were called with a list of the offending forms.
  * Otherwise, the success callbacks are made in order.
+ * <p>
+ * The validateForm() method will initiate the validation of the form, and result in either the calling of the
+ * registered success callbacks if all fields validate, or the calling of the registered failure callbacks if any fail.
  */
 public class FormManager {
     public static final String TAG = FormManager.class.getName();
@@ -49,15 +51,6 @@ public class FormManager {
         if (root instanceof Field) {
             registeredFields.add((Field) root);
         }
-        // If it's a segue button set its callback to call here to initiate validation
-        else if (root instanceof SegueButton) {
-            root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    validateForm();
-                }
-            });
-        }
         // If it's a view group recursively check its children
         else if (root instanceof ViewGroup) {
             int childCount = ((ViewGroup)root).getChildCount();
@@ -72,7 +65,7 @@ public class FormManager {
      * on failure callbacks will be made and any failure indicator views are displayed, otherwise the on success
      * callbacks will be made in order.
      */
-    private void validateForm() {
+    public void validateForm() {
         // Keep track of failed fields
         List<Field> failedFields = new ArrayList<Field>();
 
@@ -87,6 +80,10 @@ public class FormManager {
             try {
                 // Do class-y stuff
                 String validatorClassName = field.getValidatorClassName();
+                // If there is no XML attribute for the class, continue
+                if (validatorClassName == null) {
+                    continue;
+                }
                 ClassLoader classLoader = Validator.class.getClassLoader();
                 Class ValidatorClass = classLoader.loadClass(validatorClassName);
                 validator = (Validator) ValidatorClass.newInstance();
@@ -129,23 +126,6 @@ public class FormManager {
                 }
             }
         }
-    }
-
-    /**
-     * Register any view as a segue button (a button to trigger validation). Any existing on click callback associated
-     * with the view will be overridden.
-     *
-     * @param segueButton the view to register as a segue button
-     */
-    public void registerSegueButton(View segueButton) {
-        // Override the callback to call here
-        segueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateForm();
-            }
-        });
-
     }
 
     /**

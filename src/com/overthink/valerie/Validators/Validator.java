@@ -4,12 +4,10 @@ import android.view.View;
 
 /**
  * Performs validation on the field to which it is connected.
- *
- *  A Validator is
- * responsible for validating the view with which it is paired. Since the validate() method takes a View, this means
- * no compile-time assurance that you won't end up associating a Spinner with a validator designed to validate a
- * Checkbox. If you do so, a class cast exception is likely on your horizon.
  * <p>
+ * A Validator is  responsible for validating the view with which it is paired. Since the validate() method takes a
+ * View, this means no compile-time assurance that you won't end up associating a Spinner with a validator designed
+ * to validate a Checkbox. If you do so, a class cast exception is likely on your horizon.
  */
 public interface Validator {
 

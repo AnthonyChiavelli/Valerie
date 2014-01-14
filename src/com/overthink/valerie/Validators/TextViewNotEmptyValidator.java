@@ -25,6 +25,12 @@ public class TextViewNotEmptyValidator implements Validator {
         this.requirementsMessage = requirementsMessage;
     }
 
+    /**
+     * Nullary constructor needed to load class by string name
+     */
+    public TextViewNotEmptyValidator() {
+    }
+
     @Override
     public boolean validate(View view) {
 
@@ -40,7 +46,7 @@ public class TextViewNotEmptyValidator implements Validator {
         }
 
         //Ensure that field is not empty
-        return textView.getText().toString().isEmpty();
+        return !textView.getText().toString().isEmpty();
     }
 
     @Override
