@@ -130,4 +130,21 @@ public class FormManager {
             }
         }
     }
+
+    /**
+     * Register any view as a segue button (a button to trigger validation). Any existing on click callback associated
+     * with the view will be overridden.
+     *
+     * @param segueButton the view to register as a segue button
+     */
+    public void registerSegueButton(View segueButton) {
+        // Override the callback to call here
+        segueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateForm();
+            }
+        });
+
+    }
 }
