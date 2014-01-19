@@ -88,6 +88,9 @@ public class FormManager {
                 Class ValidatorClass = classLoader.loadClass(validatorClassName);
                 validator = (Validator) ValidatorClass.newInstance();
 
+                // Look up the failure indicator view for this field
+                View failureIndicatorView = field.findViewById(fieldFailureIndicatorViewId);
+
                 // Perform validation
                 // If the validation fails
                 if (!validator.validate(field.findViewById(fieldInputViewId))) {
@@ -95,9 +98,15 @@ public class FormManager {
                     failedFields.add(field);
 
                     // Display the failure indicator view if there is one
-                    View failureIndicatorView = field.findViewById(fieldFailureIndicatorViewId);
                     if (failureIndicatorView != null) {
                         failureIndicatorView.setVisibility(View.VISIBLE);
+                    }
+                }
+                // If the validation succceeds
+                else {
+                    // Hide the failure indicator view if there is one
+                    if (failureIndicatorView != null) {
+                        failureIndicatorView.setVisibility(View.GONE);
                     }
                 }
             }
@@ -110,17 +119,18 @@ public class FormManager {
             catch (IllegalAccessException e) {
                 Log.e(TAG, "Could not access Validator class from validator XML attribute String", e);
             }
-
-            // If there were any failed fields in this form
-            if (failedFields.size() > 0) {
-                this.onFormValidationFailure(failedFields);
-
-            }
-            // If everything passed
-            else {
-                this.onFormValidationSuccess();
-            }
         }
+
+        // If there were any failed fields in this form
+        if (failedFields.size() > 0) {
+            this.onFormValidationFailure(failedFields);
+
+        }
+        // If everything passed
+        else {
+            this.onFormValidationSuccess();
+        }
+
     }
 
     /**
